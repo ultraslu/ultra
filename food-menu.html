@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ultra Flames Food Menu</title>
+    <link rel="icon" href="logo.ico" type="image/x-icon" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Great+Vibes&display=swap');
+
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #121212, #1e1e1e);
+            color: #f0f0f0;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: url('https://via.placeholder.com/1920x1080/0a0a0a/ffffff?text=Fire+Background') center center / cover no-repeat fixed;
+            opacity: 0.25;
+            z-index: -1;
+        }
+        header {
+            position: sticky;
+            top: 0;
+            background-color: #1e1e1e;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #333;
+            z-index: 1000;
+        }
+        header img {
+            height: 40px;
+            cursor: pointer;
+        }
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        .menu-toggle span {
+            background: #f0f0f0;
+            height: 3px;
+            width: 25px;
+            margin: 0.25rem 0;
+            transition: all 0.3s ease;
+        }
+        .menu-toggle.active span:nth-child(1) {
+            transform: translateY(0.5rem) rotate(45deg);
+        }
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .menu-toggle.active span:nth-child(3) {
+            transform: translateY(-0.5rem) rotate(-45deg);
+        }
+        nav {
+            display: flex;
+            align-items: center;
+        }
+        nav a {
+            margin: 0 0.5rem;
+            color: #f0f0f0;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s, transform 0.2s;
+            position: relative;
+        }
+        nav a:hover,
+        nav a:focus {
+            color: #ff7043;
+            transform: scale(1.05);
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropbtn {
+            cursor: pointer;
+            user-select: none;
+            font-weight: 600;
+            color: #f0f0f0;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0 0.5rem;
+            transition: color 0.3s, transform 0.2s;
+        }
+        .dropbtn:hover,
+        .dropbtn:focus {
+            color: #ff7043;
+            transform: scale(1.05);
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #1e1e1e;
+            min-width: 160px;
+            border: 1px solid #333;
+            border-radius: 0.375rem;
+            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.3);
+            z-index: 1001;
+            top: 100%;
+            left: 0;
+            flex-direction: column;
+            padding: 0.5rem 0;
+        }
+        .dropdown-content a {
+            color: #f0f0f0;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            display: block;
+            font-weight: 400;
+            transition: background-color 0.3s;
+            margin: 0;
+        }
+        .dropdown-content a:hover,
+        .dropdown-content a:focus {
+            background-color: #333;
+            color: #ff7043;
+        }
+        .dropdown:hover .dropdown-content,
+        .dropdown:focus-within .dropdown-content {
+            display: flex;
+            flex-direction: column;
+        }
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+            nav {
+                display: none;
+                flex-direction: column;
+                background-color: #1e1e1e;
+                position: absolute;
+                top: 3.75rem;
+                right: 0.625rem;
+                border: 1px solid #333;
+                border-radius: 0.5rem;
+                padding: 1rem;
+                width: calc(100% - 2rem);
+                max-width: 18.75rem;
+                box-sizing: border-box;
+            }
+            nav.show {
+                display: flex;
+            }
+            nav a,
+            .dropbtn {
+                margin: 0.5rem 0;
+            }
+            .dropdown-content {
+                position: static;
+                border: none;
+                box-shadow: none;
+                background-color: transparent;
+                padding-left: 1rem;
+                width: auto;
+                display: none;
+            }
+            .dropdown-content.show-mobile {
+                display: flex;
+            }
+            .dropdown-content a:hover,
+            .dropdown-content a:focus {
+                background-color: transparent;
+                color: #ff7043;
+            }
+            .dish-name {
+                font-size: 1.2rem;
+                flex-wrap: wrap;
+            }
+            .dish-price {
+                font-size: 1.1rem;
+                white-space: nowrap;
+            }
+            .dish-desc {
+                font-size: 0.9rem;
+            }
+        }
+        section {
+            padding: 2rem 1rem;
+            max-width: 600px;
+            margin: auto;
+            animation: fadeIn 0.8s ease;
+        }
+        section + section {
+            border-top: 1px solid #2a2a2a;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(1.25rem);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        h2 {
+            color: #ff7043;
+            border-bottom: 1px solid #333;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.2rem;
+            text-align: center;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 1.5rem;
+            padding: 0.75rem;
+            border: 1px solid #2a2a2a;
+            border-radius: 0.5rem;
+            transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            position: relative;
+        }
+        li:hover {
+            background-color: #242424;
+            transform: translateY(-0.1875rem);
+            box-shadow: 0 0.3125rem 0.9375rem rgba(0,0,0,0.4);
+        }
+        .note {
+            font-size: 0.9rem;
+            color: #bbb;
+            margin-top: 0.5rem;
+            display: block;
+        }
+        .dish-name {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #ff7043;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+        .dish-price {
+            font-size: 1.25rem;
+            color: #f0f0f0;
+            font-weight: 600;
+            margin-left: 1rem;
+        }
+        .dish-desc {
+            font-size: 0.95rem;
+            color: #ddd;
+            margin-left: 0;
+            margin-top: 0.2rem;
+        }
+        .dish-image {
+            width: 100%;
+            height: 11.25rem;
+            object-fit: cover;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+            filter: brightness(0.85);
+            transition: filter 0.3s ease;
+        }
+        li:hover .dish-image {
+            filter: brightness(1);
+        }
+        .subsection {
+            font-family: 'Great Vibes', cursive;
+            font-size: 1.8rem;
+            color: #ff8a50;
+            margin: 2rem 0 1rem 0;
+            border-bottom: 1px solid #444;
+            padding-bottom: 0.3rem;
+            text-align: center;
+        }
+        #main-course h3 {
+            font-size: 1.6rem;
+            text-align: left;
+            border-bottom: none;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #ffaa77;
+            font-family: 'Great Vibes', cursive;
+        }
+        #sides .note {
+            text-align: center;
+            width: 100%;
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+        .also-available {
+            color: #ffca77;
+            font-weight: 600;
+        }
+		.service-charge {
+			font-size: 1rem;
+			font-weight: 600;
+			color: #ffca77;
+			text-align: center;
+			margin-top: 1rem;
+		}
+		
+    </style>
+</head>
+<body>
+<a id="top"></a>
+    <header>
+        <a href="food-menu.html"><img src="logo.png" alt="Ultra Flames Logo" /></a>
+        <div class="menu-toggle" aria-controls="main-navigation" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <nav id="main-navigation">
+            <div class="dropdown">
+                <a href="food-menu.html" class="dropbtn" aria-haspopup="menu" aria-expanded="false">Food ▼</a>
+                <div class="dropdown-content">
+                    <a href="food-menu.html">Starters &amp; Light Bites</a>
+                    <a href="#salads">Salads</a>
+                    <a href="#burgers">Burgers</a>
+					<a href="#pasta">Pasta</a>
+					<a href="#main-courses">Main Courses</a>
+                    <a href="#sides">Sides &amp; Enhancements</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <a href="index.html" class="dropbtn" aria-haspopup="menu" aria-expanded="false">Drinks ▼</a>
+                <div class="dropdown-content">
+                    <a href="index.html#cocktails">Cocktails</a>
+                    <a href="index.html#non-alcoholic-beverages">Non-Alcoholic Beverages</a>
+                    <a href="index.html#shots">Shots</a>
+                    <a href="index.html#wines-champagne">Wines &amp; Champagne</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section id="food">
+        <h2>Menu</h2>
+		<div class="service-charge">
+		<p><strong>Please note:</strong> A 10% service charge applies to all dine-in orders.</p>
+		<p><strong></strong> All main courses are served with your choice of two sides. Sides for all other selections may be ordered separately.</p>
+		</div>
+
+        <div id="starters-small-plates" class="subsection">Starters & Light Bites</div>
+        <ul>
+            <li id="soup-of-the-day">
+                <span class="dish-name">Soup of the Day<span class="dish-price">$25</span></span>
+                <span class="dish-desc">Chef’s unique daily creation, made with fresh local ingredients and bold Caribbean flavors.</span>
+            </li>
+            <li id="breadfruit-balls">
+                <img src="imgs/breadfruit.png" alt="Breadfruit Balls" class="dish-image" loading="lazy">
+                <span class="dish-name">Breadfruit Balls<span class="dish-price">$25</span></span>
+                <span class="dish-desc">Crispy fried spheres of mashed breadfruit, served with a tangy Creole relish.</span>
+            </li>
+            <li id="loaded-nachos">
+                <img src="imgs/nachos.png" alt="Loaded Nachos" class="dish-image" loading="lazy">
+                <span class="dish-name">Loaded Nachos<span class="dish-price">$25</span></span>
+                <span class="dish-desc">Tortilla chips with melted cheese, salsa, sour cream, and guacamole.
+                    <p>With Shrimp ($75), With Chicken($50), or Fish($65)</p>
+                </span>
+            </li>
+            <li id="tamarind-barbecue-wings">
+                <img src="imgs/wings.png" alt="Tamarind Glazed Wings" class="dish-image" loading="lazy">
+                <span class="dish-name">Tamarind Glazed Wings<span class="dish-price">$35</span></span>
+                <span class="dish-desc">
+                    Charred wings with a bold tamarind glaze, served with cool ranch dipping sauce.
+                    <p><span class="also-available">Also available in Honey BBQ or Buffalo style.</span></p>
+                </span>
+            </li>
+            <li id="house-couch-fritters">
+			<span class="dish-name">Couch Fritters<span class="dish-price">$35</span></span>
+			<span class="dish-desc">Crispy fritters served with pickled vegetable salad and tamarind relish.</span>
+			</li>
+            <li id="cajun-crispy-calamari">
+			<img src="imgs/calamari.png" alt="Cajun Crispy Calamari" class="dish-image" loading="lazy">
+			<span class="dish-name">Cajun Crispy Calamari<span class="dish-price">$35</span></span>
+			<span class="dish-desc">Perfectly crispy calamari tossed in Cajun seasoning, served with a zesty dipping sauce.</span>
+			</li>
+        </ul>
+
+        <div id="salads" class="subsection">Salads</div>
+        <ul>
+            <li id="farmers-market-salad">
+                <span class="dish-name">Farmers Market Salad<span class="dish-price">$25</span></span>
+                <span class="dish-desc">A fresh medley of seasonal greens and vegetables, showcasing the best of local produce.</span>
+            </li>
+          <li id="local-chips-salad">
+                <span class="dish-name">Local Chips & Salad<span class="dish-price">$25</span></span>
+                <span class="dish-desc">Assorted seasonal ground provisions with creole relish.</span>
+            </li>  
+            <li id="roasted-pumpkin-quinoa-salad">
+                <span class="dish-name">Roasted Pumpkin & Quinoa Salad<span class="dish-price">$35</span></span>
+                <span class="dish-desc">Topped with crispy plantain croutons and a balsamic glaze.</span>
+            </li>
+			<li id="grilled-conch-mango-salad">
+                <span class="dish-name">Grilled Conch & Mango Salad<span class="dish-price">$35</span></span>
+                <span class="dish-desc">Grilled conch paired with sweet mango slices, tossed in a herb dressing.</span>
+            </li>
+        </ul>
+
+        <div id="burgers" class="subsection">Burgers</div>
+        <ul>
+		<img src="imgs/salisbury.png" alt="Salisbury Steak Burger" class="dish-image" loading="lazy">
+            <li id="salisbury-steak-sandwich">
+                <span class="dish-name">Salisbury Steak Burger<span class="dish-price">$55</span></span>
+                <span class="dish-desc">Juicy griddled ground beef patty stacked 
+				on a toasted brioche bun with melted cheddar, crispy bacon, red 
+				wine–braised mushrooms, house-made pickles, and fresh lettuce. Served with coleslaw and fries.</span>
+            </li>
+            <li id="plain-burger">
+                <span class="dish-name">Classic Cheeseburger<span class="dish-price">$45</span></span>
+                <span class="dish-desc">
+                    Juicy grilled beef patty topped with melted cheese, served with fries and garden salad.
+            </li>
+        </ul>
+		<div id="pasta" class="subsection">Pasta</div>
+		<ul>
+            <li id="lambi-alfredo">
+                <img src="imgs/alfredo.png" alt="Lambi Alfredo" class="dish-image" loading="lazy">
+                <span class="dish-name">Lambi Alfredo<span class="dish-price">$70</span></span>
+                <span class="dish-desc">
+                    Creamy Alfredo pasta with tender conch and basil.
+                    <p><span class="also-available">Also available with succulent grilled chicken for a comforting classic. ($45)</span></p>
+                </span>
+            </li>
+		</ul>
+        <div id="main-courses" class="subsection">Main Courses</div>
+        <ul>
+            <li id="street-party-jerk-chicken">
+                <img src="imgs/jerk.png" alt="Jerk Chicken" class="dish-image" loading="lazy">
+                <span class="dish-name">Street Style Jerk Chicken<span class="dish-price">$45</span></span>
+                <span class="dish-desc">Tender, spice-rubbed jerk chicken grilled over open flames, bursting with island heat and smoky depth.
+				<p><span class="also-available">Also available with a smoky barbecue glaze for a timeless classic.</span></p>
+                </span>
+            </li>
+			<li id="blackened-catch-of-the-day">
+                <img src="imgs/catch.png" alt="Catch of the Day" class="dish-image" loading="lazy">
+                <span class="dish-name">Grilled Catch of the Day<span class="dish-price">$58</span></span>
+                <span class="dish-desc">Topped with mango salsa and chimichurri sauce.</span>
+            </li>
+			<li id="fire-roasted-lambi-souskai">
+                <span class="dish-name">Creole Fire-Roasted Lambi<span class="dish-price">$65</span></span>
+                <span class="dish-desc">Smoked conch in a rich tomato-based Creole sauce.</span>
+            </li>
+            <li id="cajun-shrimp-mango-souskai">
+                <span class="dish-name">Cajun Shrimp Mango Souskai<span class="dish-price">$75</span></span>
+                <span class="dish-desc">Plump shrimp in sweet and spicy mango sauce.</span>
+            </li>
+            <li id="mexican-style-bbq-ribs">
+                <img src="imgs/ribs3.png" alt="Mexican BBQ Ribs" class="dish-image" loading="lazy">
+                <span class="dish-name">Mexican BBQ Ribs<span class="dish-price">$75</span></span>
+                <span class="dish-desc">Fire-roasted ribs with slaw and pico de gallo.</span>
+            </li>
+			<li id="street-party-jerk-pork">
+                <span class="dish-name">Street Style Jerk Pork<span class="dish-price">$75</span></span>
+                <span class="dish-desc">Succulent pork marinated in a fiery
+				jerk blend, flame-grilled to perfection and served 
+				with traditional island accompaniments. 
+				<p><span class="also-available">Also available with a smoky barbecue twist for a rich, savory experience.</span></p>
+                </span>
+            </li>
+			<li id="steak-jour">
+                <img src="imgs/steak.png" alt="Steak De Jour" class="dish-image" loading="lazy">
+                <span class="dish-name">Steak De Jour<span class="dish-price">$75</span></span>
+                <span class="dish-desc">Prime ribeye of the day, pan-seared and finished with the chef’s signature flourish—an elegant showcase of today’s finest cut.
+If you’re featuring a different cut like filet mignon, striploin, or bavette on a given day, I can tailor the wording to match. Just say the word. 🥩✨
+</span>
+            </li>
+        </ul>
+
+        <div id="sides" class="subsection">Sides & Enhancements</div>
+        <p class="note">Each main course is complemented by two sides of your choice.</p>
+        <ul>
+            <li id="buttered-garden-vegetables"><span class="dish-name">Buttered Vegetables<span class="dish-price">$10</span></span></li>
+            <li id="garden-salad"><span class="dish-name">Garden Salad<span class="dish-price">$10</span></span></li>
+            <li id="cole-slaw"><span class="dish-name">Coleslaw<span class="dish-price">$10</span></span></li>
+            <li id="herb-rice"><span class="dish-name">Herb Rice<span class="dish-price">$10</span></span></li>
+            <li id="roasted-garlic-mashed-potato"><span class="dish-name">Garlic Mashed Potatoes<span class="dish-price">$10</span></span></li>
+            <li id="fried-plantain"><span class="dish-name">Fried Plantains<span class="dish-price">$10</span></span></li>
+            <li id="sweet-potato-fries"><span class="dish-name">Sweet Potato Fries<span class="dish-price">$10</span></span></li>
+            <li id="pommes-frites"><span class="dish-name">French Fries<span class="dish-price">$10</span></span></li>
+        </ul>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const mainNav = document.getElementById('main-navigation');
+            const dropdownButtons = document.querySelectorAll('.dropbtn');
+            const allDropdownContents = document.querySelectorAll('.dropdown-content');
+
+            function closeAllMobileDropdowns() {
+                allDropdownContents.forEach(content => {
+                    if (content.classList.contains('show-mobile')) {
+                        content.classList.remove('show-mobile');
+                        content.previousElementSibling.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            }
+
+            menuToggle.addEventListener('click', function() {
+                mainNav.classList.toggle('show');
+                menuToggle.classList.toggle('active');
+                const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
+                menuToggle.setAttribute('aria-expanded', !isExpanded);
+                if (!mainNav.classList.contains('show')) {
+                    closeAllMobileDropdowns();
+                }
+            });
+
+            dropdownButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const dropdownContent = this.nextElementSibling;
+                    const isExpanded = this.getAttribute('aria-expanded') === 'true';
+
+                    if (window.innerWidth <= 768) {
+                        allDropdownContents.forEach(content => {
+                            if (content !== dropdownContent && content.classList.contains('show-mobile')) {
+                                content.classList.remove('show-mobile');
+                                content.previousElementSibling.setAttribute('aria-expanded', 'false');
+                            }
+                        });
+                    }
+
+                    if (isExpanded) {
+                        dropdownContent.classList.remove('show-mobile');
+                        dropdownContent.style.display = '';
+                        this.setAttribute('aria-expanded', 'false');
+                    } else {
+                        if (window.innerWidth <= 768) {
+                            dropdownContent.classList.add('show-mobile');
+                        } else {
+                            dropdownContent.style.display = 'flex';
+                        }
+                        this.setAttribute('aria-expanded', 'true');
+                    }
+                });
+
+                button.addEventListener('keydown', function(e) {
+                    const dropdownContent = this.nextElementSibling;
+                    const links = dropdownContent.querySelectorAll('a');
+
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                        if (this.getAttribute('aria-expanded') === 'true' && links.length > 0) {
+                            links[0].focus();
+                        }
+                    } else if (e.key === 'Escape') {
+                        if (dropdownContent.classList.contains('show-mobile') || dropdownContent.style.display === 'flex') {
+                            dropdownContent.classList.remove('show-mobile');
+                            dropdownContent.style.display = '';
+                            this.setAttribute('aria-expanded', 'false');
+                            this.focus();
+                        }
+                    } else if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        if (this.getAttribute('aria-expanded') === 'false') {
+                            this.click();
+                        }
+                        if (links.length > 0) {
+                            links[0].focus();
+                        }
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        if (this.getAttribute('aria-expanded') === 'false') {
+                            this.click();
+                        }
+                        if (links.length > 0) {
+                            links[links.length - 1].focus();
+                        }
+                    }
+                });
+
+                button.nextElementSibling.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('keydown', function(e) {
+                        const parentDropdownContent = this.closest('.dropdown-content');
+                        const parentDropbtn = parentDropdownContent.previousElementSibling;
+                        const links = Array.from(parentDropdownContent.querySelectorAll('a'));
+                        let currentFocus = links.indexOf(this);
+
+                        if (e.key === 'ArrowDown') {
+                            e.preventDefault();
+                            if (currentFocus < links.length - 1) {
+                                links[currentFocus + 1].focus();
+                            } else {
+                                links[0].focus();
+                            }
+                        } else if (e.key === 'ArrowUp') {
+                            e.preventDefault();
+                            if (currentFocus > 0) {
+                                links[currentFocus - 1].focus();
+                            } else {
+                                links[links.length - 1].focus();
+                            }
+                        } else if (e.key === 'Escape') {
+                            parentDropdownContent.classList.remove('show-mobile');
+                            parentDropdownContent.style.display = '';
+                            parentDropbtn.setAttribute('aria-expanded', 'false');
+                            parentDropbtn.focus();
+                        } else if (e.key === 'Tab' && !e.shiftKey && currentFocus === links.length - 1) {
+                            parentDropdownContent.classList.remove('show-mobile');
+                            parentDropdownContent.style.display = '';
+                            parentDropbtn.setAttribute('aria-expanded', 'false');
+                        } else if (e.key === 'Tab' && e.shiftKey && currentFocus === 0) {
+                            e.preventDefault();
+                            parentDropdownContent.classList.remove('show-mobile');
+                            parentDropdownContent.style.display = '';
+                            parentDropbtn.setAttribute('aria-expanded', 'false');
+                            parentDropbtn.focus();
+                        }
+                    });
+                });
+            });
+
+            document.addEventListener('click', function(event) {
+                const dropdowns = document.querySelectorAll('.dropdown');
+                dropdowns.forEach(dropdown => {
+                    const dropbtn = dropdown.querySelector('.dropbtn');
+                    const dropdownContent = dropdown.querySelector('.dropdown-content');
+                    if (!dropdown.contains(event.target)) {
+                        if (window.innerWidth > 768 || dropdownContent.classList.contains('show-mobile')) {
+                            dropdownContent.classList.remove('show-mobile');
+                            dropdownContent.style.display = '';
+                            if (dropbtn) {
+                                dropbtn.setAttribute('aria-expanded', 'false');
+                            }
+                        }
+                    }
+                });
+
+                if (window.innerWidth <= 768 && !mainNav.contains(event.target) && !menuToggle.contains(event.target)) {
+                    mainNav.classList.remove('show');
+                    menuToggle.classList.remove('active');
+                    menuToggle.setAttribute('aria-expanded', 'false');
+                    closeAllMobileDropdowns();
+                }
+            });
+
+            mainNav.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        mainNav.classList.remove('show');
+                        menuToggle.classList.remove('active');
+                        menuToggle.setAttribute('aria-expanded', 'false');
+                        closeAllMobileDropdowns();
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

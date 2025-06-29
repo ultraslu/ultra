@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ultra Flames Drinks Menu</title>
+    <link rel="icon" href="logo.ico" type="image/x-icon" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Great+Vibes&display=swap');
+
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #121212, #1e1e1e);
+            color: #f0f0f0;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: url('https://via.placeholder.com/1920x1080/0a0a0a/ffffff?text=Fire+Background') center center / cover no-repeat fixed;
+            opacity: 0.25;
+            z-index: -1;
+        }
+        header {
+            position: sticky;
+            top: 0;
+            background-color: #1e1e1e;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #333;
+            z-index: 1000;
+        }
+        header img {
+            height: 40px;
+            cursor: pointer;
+        }
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        .menu-toggle span {
+            background: #f0f0f0;
+            height: 3px;
+            width: 25px;
+            margin: 0.25rem 0;
+            transition: all 0.3s ease;
+        }
+        .menu-toggle.active span:nth-child(1) {
+            transform: translateY(0.5rem) rotate(45deg);
+        }
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .menu-toggle.active span:nth-child(3) {
+            transform: translateY(-0.5rem) rotate(-45deg);
+        }
+        nav {
+            display: flex;
+            align-items: center;
+        }
+        nav a {
+            margin: 0 0.5rem;
+            color: #f0f0f0;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s, transform 0.2s;
+            position: relative;
+        }
+        nav a:hover,
+        nav a:focus {
+            color: #ff7043;
+            transform: scale(1.05);
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropbtn {
+            cursor: pointer;
+            user-select: none;
+            font-weight: 600;
+            color: #f0f0f0;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0 0.5rem;
+            transition: color 0.3s, transform 0.2s;
+        }
+        .dropbtn:hover,
+        .dropbtn:focus {
+            color: #ff7043;
+            transform: scale(1.05);
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #1e1e1e;
+            min-width: 160px;
+            border: 1px solid #333;
+            border-radius: 0.375rem;
+            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.3);
+            z-index: 1001;
+            top: 100%;
+            left: 0;
+            flex-direction: column;
+            padding: 0.5rem 0;
+        }
+        .dropdown-content a {
+            color: #f0f0f0;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            display: block;
+            font-weight: 400;
+            transition: background-color 0.3s;
+            margin: 0;
+        }
+        .dropdown-content a:hover,
+        .dropdown-content a:focus {
+            background-color: #333;
+            color: #ff7043;
+        }
+        .dropdown:hover .dropdown-content,
+        .dropdown:focus-within .dropdown-content {
+            display: flex;
+            flex-direction: column;
+        }
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+            nav {
+                display: none;
+                flex-direction: column;
+                background-color: #1e1e1e;
+                position: absolute;
+                top: 3.75rem;
+                right: 0.625rem;
+                border: 1px solid #333;
+                border-radius: 0.5rem;
+                padding: 1rem;
+                width: calc(100% - 2rem);
+                max-width: 18.75rem;
+                box-sizing: border-box;
+            }
+            nav.show {
+                display: flex;
+            }
+            nav a,
+            .dropbtn {
+                margin: 0.5rem 0;
+            }
+            .dropdown-content {
+                position: static;
+                border: none;
+                box-shadow: none;
+                background-color: transparent;
+                padding-left: 1rem;
+                width: auto;
+                display: none;
+            }
+            .dropdown-content.show-mobile {
+                display: flex;
+            }
+            .dropdown-content a:hover,
+            .dropdown-content a:focus {
+                background-color: transparent;
+                color: #ff7043;
+            }
+            .dish-name {
+                font-size: 1.2rem;
+                flex-wrap: wrap;
+            }
+            .dish-price {
+                font-size: 1.1rem;
+                white-space: nowrap;
+            }
+            .dish-desc {
+                font-size: 0.9rem;
+            }
+        }
+        section {
+            padding: 2rem 1rem;
+            max-width: 600px;
+            margin: auto;
+            animation: fadeIn 0.8s ease;
+        }
+        section + section {
+            border-top: 1px solid #2a2a2a;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(1.25rem);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        h2 {
+            color: #ff7043;
+            border-bottom: 1px solid #333;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.2rem;
+            text-align: center;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 1.5rem;
+            padding: 0.75rem;
+            border: 1px solid #2a2a2a;
+            border-radius: 0.5rem;
+            transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            position: relative;
+        }
+        li:hover {
+            background-color: #242424;
+            transform: translateY(-0.1875rem);
+            box-shadow: 0 0.3125rem 0.9375rem rgba(0,0,0,0.4);
+        }
+        .note {
+            font-size: 0.9rem;
+            color: #bbb;
+            margin-top: 0.5rem;
+            display: block;
+        }
+        .dish-name {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #ff7043;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+        .dish-price {
+            font-size: 1.25rem;
+            color: #f0f0f0;
+            font-weight: 600;
+            margin-left: 1rem;
+        }
+        .dish-desc {
+            font-size: 0.95rem;
+            color: #ddd;
+            margin-left: 0;
+            margin-top: 0.2rem;
+        }
+        .dish-image {
+            width: 100%;
+            height: 11.25rem;
+            object-fit: cover;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+            filter: brightness(0.85);
+            transition: filter 0.3s ease;
+        }
+        li:hover .dish-image {
+            filter: brightness(1);
+        }
+        .subsection {
+            font-family: 'Great Vibes', cursive;
+            font-size: 1.8rem;
+            color: #ff8a50;
+            margin: 2rem 0 1rem 0;
+            border-bottom: 1px solid #444;
+            padding-bottom: 0.3rem;
+            text-align: center;
+        }
+        #main-course h3 {
+            font-size: 1.6rem;
+            text-align: left;
+            border-bottom: none;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #ffaa77;
+            font-family: 'Great Vibes', cursive;
+        }
+        #sides .note {
+            text-align: center;
+            width: 100%;
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <a id="top"></a>
+    <header>
+        <a href="index.html"><img src="logo.png" alt="Ultra Flames Logo" /></a>
+        <div class="menu-toggle" aria-controls="main-navigation" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <nav id="main-navigation">
+            <div class="dropdown">
+                <a href="food-menu.html" class="dropbtn" aria-haspopup="menu" aria-expanded="false">Food ▼</a>
+                <div class="dropdown-content">
+                    <a href="food-menu.html">Starters &amp; Light Bites</a>
+                    <a href="food-menu.html#salads">Salads</a>
+                    <a href="food-menu.html#burgers">Burgers</a>
+					<a href="food-menu.html#pasta">Pasta</a>
+					<a href="food-menu.html#main-courses">Main Courses</a>
+                    <a href="food-menu.html#sides">Sides &amp; Enhancements</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <a href="#drinks" class="dropbtn" aria-haspopup="menu" aria-expanded="false">Drinks ▼</a>
+                <div class="dropdown-content">
+                    <a href="#cocktails">Cocktails</a>
+                    <a href="#non-alcoholic-beverages">Non-Alcoholic Beverages</a>
+                    <a href="#shots">Shots</a>
+                    <a href="#wines-champagne">Wines &amp; Champagne</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section id="drinks">
+        <h2>Drinks</h2>
+
+        <div id="cocktails" class="subsection">Cocktails</div>
+        <ul>
+            <li id="amaretto-sour">
+                <span class="dish-name">Amaretto Sour</span><span class="dish-price">$15.00</span>
+                <span class="dish-desc">Amaretto, lemon juice, simple syrup. (Shaken)</span>
+            </li>
+            <li id="bareback-cocktail">
+                <span class="dish-name">Bareback Cocktail</span><span class="dish-price">$20.00</span>
+                <span class="dish-desc">Whiskey, amaretto, citrus juices, honey. (Shaken)</span>
+            </li>
+            <li id="bbc-cocktail">
+                <span class="dish-name">BBC</span><span class="dish-price">$25.00</span>
+                <span class="dish-desc">Banana liqueur, Baileys, coconut rum, ice. (Blended)</span>
+            </li>
+            <li id="bob-marley-cocktail">
+                <span class="dish-name">Bob Marley</span><span class="dish-price">$20.00</span>
+                <span class="dish-desc">Layered grenadine, banana liqueur, coconut &amp; overproof rum. (Layered)</span>
+            </li>
+            <li id="blue-hawaiian">
+                <span class="dish-name">Blue Hawaiian</span><span class="dish-price">$18.00</span>
+                <span class="dish-desc">Blue curaçao, rum, coconut cream, pineapple juice. (Blended)</span>
+            </li>
+            <li id="cosmopolitan">
+                <span class="dish-name">Cosmopolitan</span><span class="dish-price">$25.00</span>
+                <span class="dish-desc">Vodka, cranberry juice, triple sec, lime. (Shaken)</span>
+            </li>
+            <li id="daiquiri">
+                <span class="dish-name">Daiquiri</span><span class="dish-price">$20.00</span>
+                <span class="dish-desc">Rum, lime juice, simple syrup. (Shaken)</span>
+            </li>
+            <li id="death-wish-cocktail">
+                <span class="dish-name">Death Wish</span><span class="dish-price">$15.00</span>
+                <span class="dish-desc">Dark rum, triple sec, grenadine, citrus. (Shaken)</span>
+            </li>
+            <li id="devil-margarita">
+                <span class="dish-name">Devil Margarita</span><span class="dish-price">$25.00</span>
+                <span class="dish-desc">Tequila, lime, simple syrup, red wine float. (Shaken)</span>
+            </li>
+            <li id="fish-bowl">
+                <span class="dish-name">Fish Bowl</span><span class="dish-price">$45.00</span>
+                <span class="dish-desc">Shareable vodka, blue curaçao, lemonade, with either a Strong Bow or Rude Boy. (Mixed)</span>
+            </li>
+            <li id="flavoured-orgasm">
+                <span class="dish-name">Flavoured Orgasm</span><span class="dish-price">$18.00</span>
+                <span class="dish-desc">Peach schnapps, Baileys, Kahlua, fruit flavors. (Shaken)</span>
+            </li>
+            <li id="girls-fantasy">
+                <span class="dish-name">Girls Fantasy</span><span class="dish-price">$20.00</span>
+                <span class="dish-desc">Vodka, coconut cream, strawberry puree, grenadine. (Blended)</span>
+            </li>
+            <li id="girls-passion">
+                <span class="dish-name">Girls Passion</span><span class="dish-price">$18.00</span>
+                <span class="dish-desc">Passion fruit, vodka, touch of sweetness. (Shaken)</span>
+            </li>
+            <li id="hurricane-cocktail">
+                <span class="dish-name">Hurricane</span><span class="dish-price">$20.00</span>
+                <span class="dish-desc">Dark rum, passion fruit juice, lime, grenadine. (Shaken)</span>
+            </li>
+            <li id="margarita">
+                <span class="dish-name">Margarita</span><span class="dish-price">$15.00</span>
+                <span class="dish-desc">Tequila, lime juice, triple sec, salted rim (sugar rim on request). (Shaken)</span>
+            </li>
+            <li id="martini">
+                <span class="dish-name">Martini</span><span class="dish-price">$18.00</span>
+                <span class="dish-desc">Gin or vodka with dry vermouth, olives/lemon. (Stirred or Shaken)</span>
+            </li>
+            <li id="mimosa">
+                <span class="dish-name">Miami Vice</span><span class="dish-price">$20.00</span>
+                <span class="dish-desc">White rum, coconut cream, pineapple juice, strawberry, lime juice, blended layers. (Blended)</span>
+            </li>
+            <li id="mimosa">
+                <span class="dish-name">Mimosa</span><span class="dish-price">$18.00</span>
+                <span class="dish-desc">Champagne and fresh orange juice. (Built)</span>
+            </li>
+            <li id="mojito">
+                <span class="dish-name">Mojito</span><span class="dish-price">$18.00</span>
+                <span class="dish-desc">White rum, lime, mint, sugar, soda. (Muddled & Stirred)</span>
+            </li>
+            <li id="mudslide">
+                <span class="dish-name">Mudslide</span><span class="dish-price">$20.00</span>
+                <span class="dish-desc">Vodka, coffee liqueur, Baileys, vanilla ice cream. (Blended)</span>
+            </li>
+            <li id="pain-killer">
+                <span class="dish-name">Pain Killer</span><span class="dish-price">$25.00</span>
+                <span class="dish-desc">Dark rum, pineapple juice, orange juice, coconut cream, nutmeg. (Shaken)</span>
+            </li>
+            <li id="panty-dropper">
+                <span class="dish-name">Panty Dropper</span><span class="dish-price">$15.00</span>
+                <span class="dish-desc">Vodka, peach schnapps, cranberry juice, grenadine. (Shaken)</span>
+            </li>
+            <li id="peach-sour">
+                <span class="dish-name">Peach Sour</span><span class="dish-price">$15.00</span>
+                <span class="dish-desc">Peach schnapps, lemon juice, simple syrup, soda. (Shaken)</span>
+            </li>
+            <li id="pina-colada">
+                <span class="dish-name">Piña Colada</span><span class="dish-price">$18.00</span>
+                <span class="dish-desc">Rum, coconut cream, pineapple juice, ice. (Blended)</span>
+            </li>
+            <li id="rum-punch">
+                <span class="dish-name">Rum Punch</span><span class="dish-price">$18.00</span>
+                <span class="dish-desc">Tropical rum, fruit juices (orange, pineapple, lime), grenadine, simple syrup. (Shaken)</span>
+            </li>
+            <li id="rum-sour">
+                <span class="dish-name">Rum Sour</span><span class="dish-price">$15.00</span>
+                <span class="dish-desc">Rum, lime juice, simple syrup. (Shaken)</span>
+            </li>
+            <li id="sex-on-the-beach">
+                <span class="dish-name">Sex on the Beach</span><span class="dish-price">$15.00</span>
+                <span class="dish-desc">Vodka, peach schnapps, cranberry, orange juice. (Shaken)</span>
+            </li>
+            <li id="tequila-sunrise">
+                <span class="dish-name">Tequila Sunrise</span><span class="dish-price">$20.00</span>
+                <span class="dish-desc">Tequila, orange juice, grenadine. (Built)</span>
+            </li>
+            <li id="ti-porch">
+                <span class="dish-name">Ti Porch</span><span class="dish-price">$15.00</span>
+                <span class="dish-desc">Caribbean rum, bitters, citrus juices. (Shaken)</span>
+            </li>
+            <li id="ultra-blend">
+                <span class="dish-name">Ultra Blend</span><span class="dish-price">$18.00</span>
+                <span class="dish-desc">Tropical flavors, fruit liquors, premium spirits. (Blended)</span>
+            </li>
+            <li id="ultra-punch-alcohol">
+                <span class="dish-name">Ultra Punch Alcohol</span><span class="dish-price">$18.00</span>
+                <span class="dish-desc">Boozy fruit punch with rum/vodka, fresh fruit. (Shaken)</span>
+            </li>
+            <li id="ultra-zombie">
+                <span class="dish-name">Ultra Zombie</span><span class="dish-price">$25.00</span>
+                <span class="dish-desc">Light, dark, overproof rum, tropical juices, bitters. (Shaken)</span>
+            </li>
+            <li id="wet-dreams">
+                <span class="dish-name">Wet Dreams</span><span class="dish-price">$15.00</span>
+                <span class="dish-desc">Peach schnapps, cranberry juice, lemon-lime soda. (Shaken)</span>
+            </li>
+            <li id="white-russian">
+                <span class="dish-name">White Russian</span><span class="dish-price">$20.00</span>
+                <span class="dish-desc">Vodka, coffee liqueur, heavy cream. (Built)</span>
+            </li>
+            <li id="whiskey-sour">
+                <span class="dish-name">Whiskey Sour</span><span class="dish-price">$20.00</span>
+                <span class="dish-desc">Whiskey, lemon juice, simple syrup. (Shaken)</span>
+            </li>
+            <li id="wine-spritzer">
+                <span class="dish-name">Wine Spritzer</span><span class="dish-price">$16.00</span>
+                <span class="dish-desc">White wine with soda water or tonic. (Built)</span>
+            </li>
+            <li id="yellow-bird">
+                <span class="dish-name">Yellow Bird</span><span class="dish-price">$15.00</span>
+                <span class="dish-desc">Rum, banana liqueur, galliano, tropical juices. (Shaken)</span>
+            </li>
+        </ul>
+
+        <div id="non-alcoholic-beverages" class="subsection">Non-Alcoholic Beverages</div>
+        <ul>
+            <li id="angostura-chill-llb"><span class="dish-name">Angostura Chill LLB</span><span class="dish-price">$8.00</span>
+            </li>
+            <li id="coke-coca-cola"><span class="dish-name">Coke/Coca-Cola</span><span class="dish-price">$5.00</span></li>
+            <li id="ginger-ale-soda-water"><span class="dish-name">Ginger Ale/Soda Water</span><span class="dish-price">$5.00</span></li>
+            <li id="iced-tea"><span class="dish-name">Iced Tea</span><span class="dish-price">$10.00</span></li>
+            <li id="juice"><span class="dish-name">Juice</span><span class="dish-price">$6.00</span></li>
+            <li id="milkshake"><span class="dish-name">Milkshake</span><span class="dish-price">$15.00</span></li>
+            <li id="san-pellegrino-sparkling-mineral-water"><span class="dish-name">San Pellegrino</span><span class="dish-price">$20.00</span></li>
+            <li id="sprite"><span class="dish-name">Sprite</span><span class="dish-price">$5.00</span></li>
+            <li id="ultra-fruit-punch-non-alcoholic"><span class="dish-name">Ultra Fruit Punch (Non-Alc)</span><span class="dish-price">$12.00</span></li>
+            <li id="virgin-cocktail-mocktails"><span class="dish-name">Virgin Cocktail/Mocktails</span><span class="dish-price">$12.00</span></li>
+            <li id="blue-waters"><span class="dish-name">Water</span><span class="dish-price">$5.00</span></li>
+            <li id="piton-malt"><span class="dish-name">Piton Malt</span><span class="dish-price">$5.00</span></li>
+        </ul>
+
+        <div id="shots" class="subsection">Shots</div>
+        <ul>
+            <li id="b-52-shot">
+                <span class="dish-name">B-52</span><span class="dish-price">$15.00</span>
+                <span class="dish-desc">Kahlúa, Baileys, Grand Marnier layered.</span>
+            </li>
+            <li id="blowjob-shot">
+                <span class="dish-name">Blowjob Shot</span><span class="dish-price">$15.00</span>
+                <span class="dish-desc">Baileys, amaretto, whipped cream.</span>
+            </li>
+			<li id="brain-hemorrhage-cocktail">
+                <span class="dish-name">Brain Hemorrhage</span><span class="dish-price">$15.00</span>
+                <span class="dish-desc">Peach schnapps, Baileys, grenadine. (Layered)</span>
+            </li>
+			<li id="flaming-bob-marley">
+                <span class="dish-name">Flaming Bob Marley</span><span class="dish-price">$15.00</span>
+                <span class="dish-desc">Classic Bob Marley with a flaming rum layer. (Layered)</span>
+            </li>
+			<li id="jagerbomb">
+                <span class="dish-name">Jagerbomb</span><span class="dish-price">$18.00</span>
+                <span class="dish-desc">Jägermeister dropped into energy drink. (Drop Shot)</span>
+            </li>
+            <li id="slippery-nipple">
+                <span class="dish-name">Slippery Nipple</span><span class="dish-price">$18.00</span>
+                <span class="dish-desc">Sambuca and Baileys layered shot. (Layered)</span>
+            </li>
+            <li id="zombie-brain">
+                <span class="dish-name">Zombie Brain</span><span class="dish-price">$15.00</span>
+                <span class="dish-desc">Peach schnapps, blue curaçao, grenadine for "brain" effect. (Layered)</span>
+            </li>
+        </ul>
+
+        <div id="wines-champagne" class="subsection">Wines &amp; Champagne</div>
+        <ul>
+            <li id="1928-prosecco"><span class="dish-name">1928 Prosecco</span><span class="dish-price">$98.00</span></li>
+            <li id="bollinger"><span class="dish-name">Bollinger</span><span class="dish-price">$85.00</span></li>
+            <li id="cavicchioli-1928-rose-special"><span class="dish-name">Cavicchioli 1928 Rosé</span><span class="dish-price">$98.00</span></li>
+            <li id="cavicchioli-prosecco"><span class="dish-name">Cavicchioli Prosecco</span><span class="dish-price">$98.00</span></li>
+            <li id="freixenet"><span class="dish-name">Freixenet</span><span class="dish-price">$100.00</span></li>
+            <li id="la-marca-prosecco"><span class="dish-name">La Marca Prosecco</span><span class="dish-price">$120.00</span></li>
+        </ul>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const mainNav = document.getElementById('main-navigation');
+            const dropdownButtons = document.querySelectorAll('.dropbtn');
+            const allDropdownContents = document.querySelectorAll('.dropdown-content');
+
+            function closeAllMobileDropdowns() {
+                allDropdownContents.forEach(content => {
+                    if (content.classList.contains('show-mobile')) {
+                        content.classList.remove('show-mobile');
+                        content.previousElementSibling.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            }
+
+            menuToggle.addEventListener('click', function() {
+                mainNav.classList.toggle('show');
+                menuToggle.classList.toggle('active');
+                const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
+                menuToggle.setAttribute('aria-expanded', !isExpanded);
+
+                if (!mainNav.classList.contains('show')) {
+                    closeAllMobileDropdowns();
+                }
+            });
+
+            dropdownButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const dropdownContent = this.nextElementSibling;
+                    const isExpanded = this.getAttribute('aria-expanded') === 'true';
+
+                    if (window.innerWidth <= 768) {
+                        allDropdownContents.forEach(content => {
+                            if (content !== dropdownContent && content.classList.contains('show-mobile')) {
+                                content.classList.remove('show-mobile');
+                                content.previousElementSibling.setAttribute('aria-expanded', 'false');
+                            }
+                        });
+                    }
+
+                    if (isExpanded) {
+                        dropdownContent.classList.remove('show-mobile');
+                        dropdownContent.style.display = '';
+                        this.setAttribute('aria-expanded', 'false');
+                    } else {
+                        if (window.innerWidth <= 768) {
+                            dropdownContent.classList.add('show-mobile');
+                        } else {
+                            dropdownContent.style.display = 'flex';
+                        }
+                        this.setAttribute('aria-expanded', 'true');
+                    }
+                });
+
+                button.addEventListener('keydown', function(e) {
+                    const dropdownContent = this.nextElementSibling;
+                    const links = dropdownContent.querySelectorAll('a');
+                    let currentFocus = -1;
+
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                        if (this.getAttribute('aria-expanded') === 'true' && links.length > 0) {
+                            links[0].focus();
+                        }
+                    } else if (e.key === 'Escape') {
+                        if (dropdownContent.classList.contains('show-mobile') || dropdownContent.style.display === 'flex') {
+                            dropdownContent.classList.remove('show-mobile');
+                            dropdownContent.style.display = '';
+                            this.setAttribute('aria-expanded', 'false');
+                            this.focus();
+                        }
+                    } else if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        if (this.getAttribute('aria-expanded') === 'false') {
+                            this.click();
+                        }
+                        if (links.length > 0) {
+                            links[0].focus();
+                        }
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        if (this.getAttribute('aria-expanded') === 'false') {
+                            this.click();
+                        }
+                        if (links.length > 0) {
+                            links[links.length - 1].focus();
+                        }
+                    }
+                });
+
+                button.nextElementSibling.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('keydown', function(e) {
+                        const parentDropdownContent = this.closest('.dropdown-content');
+                        const parentDropbtn = parentDropdownContent.previousElementSibling;
+                        const links = Array.from(parentDropdownContent.querySelectorAll('a'));
+                        let currentFocus = links.indexOf(this);
+
+                        if (e.key === 'ArrowDown') {
+                            e.preventDefault();
+                            if (currentFocus < links.length - 1) {
+                                links[currentFocus + 1].focus();
+                            } else {
+                                links[0].focus();
+                            }
+                        } else if (e.key === 'ArrowUp') {
+                            e.preventDefault();
+                            if (currentFocus > 0) {
+                                links[currentFocus - 1].focus();
+                            } else {
+                                links[links.length - 1].focus();
+                            }
+                        } else if (e.key === 'Escape') {
+                            parentDropdownContent.classList.remove('show-mobile');
+                            parentDropdownContent.style.display = '';
+                            parentDropbtn.setAttribute('aria-expanded', 'false');
+                            parentDropbtn.focus();
+                        } else if (e.key === 'Tab' && !e.shiftKey && currentFocus === links.length - 1) {
+                            parentDropdownContent.classList.remove('show-mobile');
+                            parentDropdownContent.style.display = '';
+                            parentDropbtn.setAttribute('aria-expanded', 'false');
+                        } else if (e.key === 'Tab' && e.shiftKey && currentFocus === 0) {
+                            e.preventDefault();
+                            parentDropdownContent.classList.remove('show-mobile');
+                            parentDropdownContent.style.display = '';
+                            parentDropbtn.setAttribute('aria-expanded', 'false');
+                            parentDropbtn.focus();
+                        }
+                    });
+                });
+            });
+
+            document.addEventListener('click', function(event) {
+                const dropdowns = document.querySelectorAll('.dropdown');
+                dropdowns.forEach(dropdown => {
+                    const dropbtn = dropdown.querySelector('.dropbtn');
+                    const dropdownContent = dropdown.querySelector('.dropdown-content');
+                    if (!dropdown.contains(event.target)) {
+                        if (window.innerWidth > 768 || dropdownContent.classList.contains('show-mobile')) {
+                            dropdownContent.classList.remove('show-mobile');
+                            dropdownContent.style.display = '';
+                            if (dropbtn) {
+                                dropbtn.setAttribute('aria-expanded', 'false');
+                            }
+                        }
+                    }
+                });
+
+                if (window.innerWidth <= 768 && !mainNav.contains(event.target) && !menuToggle.contains(event.target)) {
+                    mainNav.classList.remove('show');
+                    menuToggle.classList.remove('active');
+                    menuToggle.setAttribute('aria-expanded', 'false');
+                    closeAllMobileDropdowns();
+                }
+            });
+
+            mainNav.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        mainNav.classList.remove('show');
+                        menuToggle.classList.remove('active');
+                        menuToggle.setAttribute('aria-expanded', 'false');
+                        closeAllMobileDropdowns();
+                    }
+                });
+            });
+        });
+    </script>
+
+    </body>
+</html>
