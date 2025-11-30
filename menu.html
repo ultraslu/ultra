@@ -1,617 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ultra Flames Food Menu</title>
-    <link rel="icon" href="logo.ico" type="image/x-icon" />
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Great+Vibes&display=swap');
-
-        html {
-            scroll-behavior: smooth;
-        }
-        body {
-            margin: 0;
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #121212, #1e1e1e);
-            color: #f0f0f0;
-            line-height: 1.6;
-            position: relative;
-            z-index: 1;
-            overflow-x: hidden;
-        }
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: url('https://via.placeholder.com/1920x1080/0a0a0a/ffffff?text=Fire+Background') center center / cover no-repeat fixed;
-            opacity: 0.25;
-            z-index: -1;
-        }
-        header {
-            position: sticky;
-            top: 0;
-            background-color: #1e1e1e;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.5rem 1rem;
-            border-bottom: 1px solid #333;
-            z-index: 1000;
-        }
-        header img {
-            height: 40px;
-            cursor: pointer;
-        }
-        .menu-toggle {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-            padding: 0.5rem;
-        }
-        .menu-toggle span {
-            background: #f0f0f0;
-            height: 3px;
-            width: 25px;
-            margin: 0.25rem 0;
-            transition: all 0.3s ease;
-        }
-        .menu-toggle.active span:nth-child(1) {
-            transform: translateY(0.5rem) rotate(45deg);
-        }
-        .menu-toggle.active span:nth-child(2) {
-            opacity: 0;
-        }
-        .menu-toggle.active span:nth-child(3) {
-            transform: translateY(-0.5rem) rotate(-45deg);
-        }
-        nav {
-            display: flex;
-            align-items: center;
-        }
-        nav a {
-            margin: 0 0.5rem;
-            color: #f0f0f0;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s, transform 0.2s;
-            position: relative;
-        }
-        nav a:hover,
-        nav a:focus {
-            color: #ff7043;
-            transform: scale(1.05);
-        }
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-        .dropbtn {
-            cursor: pointer;
-            user-select: none;
-            font-weight: 600;
-            color: #f0f0f0;
-            text-decoration: none;
-            display: inline-block;
-            margin: 0 0.5rem;
-            transition: color 0.3s, transform 0.2s;
-        }
-        .dropbtn:hover,
-        .dropbtn:focus {
-            color: #ff7043;
-            transform: scale(1.05);
-        }
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #1e1e1e;
-            min-width: 160px;
-            border: 1px solid #333;
-            border-radius: 0.375rem;
-            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.3);
-            z-index: 1001;
-            top: 100%;
-            left: 0;
-            flex-direction: column;
-            padding: 0.5rem 0;
-        }
-        .dropdown-content a {
-            color: #f0f0f0;
-            padding: 0.5rem 1rem;
-            text-decoration: none;
-            display: block;
-            font-weight: 400;
-            transition: background-color 0.3s;
-            margin: 0;
-        }
-        .dropdown-content a:hover,
-        .dropdown-content a:focus {
-            background-color: #333;
-            color: #ff7043;
-        }
-        .dropdown:hover .dropdown-content,
-        .dropdown:focus-within .dropdown-content {
-            display: flex;
-            flex-direction: column;
-        }
-        @media (max-width: 768px) {
-            .menu-toggle {
-                display: flex;
-            }
-            nav {
-                display: none;
-                flex-direction: column;
-                background-color: #1e1e1e;
-                position: absolute;
-                top: 3.75rem;
-                right: 0.625rem;
-                border: 1px solid #333;
-                border-radius: 0.5rem;
-                padding: 1rem;
-                width: calc(100% - 2rem);
-                max-width: 18.75rem;
-                box-sizing: border-box;
-            }
-            nav.show {
-                display: flex;
-            }
-            nav a,
-            .dropbtn {
-                margin: 0.5rem 0;
-            }
-            .dropdown-content {
-                position: static;
-                border: none;
-                box-shadow: none;
-                background-color: transparent;
-                padding-left: 1rem;
-                width: auto;
-                display: none;
-            }
-            .dropdown-content.show-mobile {
-                display: flex;
-            }
-            .dropdown-content a:hover,
-            .dropdown-content a:focus {
-                background-color: transparent;
-                color: #ff7043;
-            }
-            .dish-name {
-                font-size: 1.2rem;
-                flex-wrap: wrap;
-            }
-            .dish-price {
-                font-size: 1.1rem;
-                white-space: nowrap;
-            }
-            .dish-desc {
-                font-size: 0.9rem;
-            }
-        }
-        section {
-            padding: 2rem 1rem;
-            max-width: 600px;
-            margin: auto;
-            animation: fadeIn 0.8s ease;
-        }
-        section + section {
-            border-top: 1px solid #2a2a2a;
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(1.25rem);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        h2 {
-            color: #ff7043;
-            border-bottom: 1px solid #333;
-            padding-bottom: 0.5rem;
-            margin-bottom: 1.5rem;
-            font-family: 'Great Vibes', cursive;
-            font-size: 2.2rem;
-            text-align: center;
-        }
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-        li {
-            margin-bottom: 1.5rem;
-            padding: 0.75rem;
-            border: 1px solid #2a2a2a;
-            border-radius: 0.5rem;
-            transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            position: relative;
-        }
-        li:hover {
-            background-color: #242424;
-            transform: translateY(-0.1875rem);
-            box-shadow: 0 0.3125rem 0.9375rem rgba(0,0,0,0.4);
-        }
-        .note {
-            font-size: 0.9rem;
-            color: #bbb;
-            margin-top: 0.5rem;
-            display: block;
-        }
-        .dish-name {
-            font-size: 1.35rem;
-            font-weight: 700;
-            color: #ff7043;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            margin-bottom: 0.5rem;
-        }
-        .dish-price {
-            font-size: 1.25rem;
-            color: #f0f0f0;
-            font-weight: 600;
-            margin-left: 1rem;
-        }
-        .dish-desc {
-            font-size: 0.95rem;
-            color: #ddd;
-            margin-left: 0;
-            margin-top: 0.2rem;
-        }
-        .dish-image {
-            width: 100%;
-            height: 11.25rem;
-            object-fit: cover;
-            border-radius: 0.375rem;
-            margin-bottom: 1rem;
-            filter: brightness(0.85);
-            transition: filter 0.3s ease;
-        }
-        li:hover .dish-image {
-            filter: brightness(1);
-        }
-        .subsection {
-            font-family: 'Great Vibes', cursive;
-            font-size: 1.8rem;
-            color: #ff8a50;
-            margin: 2rem 0 1rem 0;
-            border-bottom: 1px solid #444;
-            padding-bottom: 0.3rem;
-            text-align: center;
-        }
-        #main-course h3 {
-            font-size: 1.6rem;
-            text-align: left;
-            border-bottom: none;
-            margin-top: 1.5rem;
-            margin-bottom: 0.5rem;
-            color: #ffaa77;
-            font-family: 'Great Vibes', cursive;
-        }
-        #sides .note {
-            text-align: center;
-            width: 100%;
-            margin-bottom: 1rem;
-            font-style: italic;
-        }
-        .also-available {
-            color: #ffca77;
-            font-weight: 600;
-        }
-		.service-charge {
-			font-size: 1rem;
-			font-weight: 600;
-			color: #ffca77;
-			text-align: center;
-			margin-top: 1rem;
-		}
-		
-    </style>
+<meta charset="UTF-8">
+<title>Ultra Flames - Food Menu</title>
+<link rel="icon" href="logo.ico">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #000;
+    color: #f0f0f0;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+header {
+    background-color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid #333;
+}
+header img {
+    height: 50px;
+}
+nav a {
+    margin: 0 0.75rem;
+    color: #f0f0f0;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+nav a:hover {
+    color: #ff7043;
+}
+section {
+    padding: 2rem 1rem;
+    max-width: 650px;
+    margin: auto;
+}
+h2 {
+    color: #ff7043;
+    border-bottom: 1px solid #333;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-family: 'Great Vibes', cursive;
+    font-size: 2.4rem;
+    text-align: center;
+}
+ul {
+    list-style: none;
+    padding: 0;
+}
+li {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border: 1px solid #2a2a2a;
+    border-radius: 0.5rem;
+    transition: 0.3s;
+    background: #0a0a0a;
+}
+li:hover {
+    background: #1a1a1a;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+}
+.dish-name {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #ff7043;
+    display: flex;
+    justify-content: space-between;
+}
+.dish-price {
+    font-size: 1.25rem;
+    color: #fff;
+}
+.dish-desc {
+    font-size: 1rem;
+    color: #ccc;
+    margin-top: 0.3rem;
+}
+.subsection {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2rem;
+    color: #ff8a50;
+    text-align: center;
+    margin: 2.2rem 0 1rem;
+}
+</style>
 </head>
 <body>
-<a id="top"></a>
-    <header>
-        <a href="food-menu.html"><img src="logo.png" alt="Ultra Flames Logo" /></a>
-        <div class="menu-toggle" aria-controls="main-navigation" aria-expanded="false">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-        <nav id="main-navigation">
-            <div class="dropdown">
-                <a href="menu.html" class="dropbtn" aria-haspopup="menu" aria-expanded="false">Food ▼</a>
-                <div class="dropdown-content">
-                    <a href="food-menu.html">Quick Bites</a>
-                    <a href="#burgers">Burgers</a>
-					<a href="#pasta">Pasta</a>
-					<a href="#wraps">Wraps</a>
-					<a href="#desserts">Desserts</a>
-                </div>
-            </div>
-            <div class="dropdown">
-                <a href="index.html" class="dropbtn" aria-haspopup="menu" aria-expanded="false">Drinks ▼</a>
-                <div class="dropdown-content">
-                    <a href="index.html#cocktails">Cocktails</a>
-                    <a href="index.html#non-alcoholic-beverages">Non-Alcoholic Beverages</a>
-                    <a href="index.html#shots">Shots</a>
-                    <a href="index.html#wines-champagne">Wines &amp; Champagne</a>
-                </div>
-            </div>
-        </nav>
-    </header>
 
-    <section id="food">
-        <h2>Menu</h2>
-		<div class="service-charge">
-		<p><strong>Please note:</strong> A 10% service charge applies to all dine-in orders.</p>
-		</div>
+<header>
+    <a href="food-menu.html"><img src="imgs/long.png" alt="Ultra Flames Logo" height="2"></a>
+    <nav>
+        <a href="index.html">Drinks Menu</a>
+        <a href="menu.html">Food Menu</a>
+    </nav>
+</header>
 
-        
-<div id="starters-small-plates" class="subsection">Quick Bites</div>
+<section id="food">
+<h2>Menu</h2>
+
+<div class="subsection">Quick Bites</div>
 <ul>
-	 <li id="ultra-wings">
-        <img src="imgs/wings.png" alt="Ultra Wings" class="dish-image" loading="lazy">
-        <span class="dish-name">Ultra Wings<span class="dish-price">$28</span></span>
-        <span class="dish-desc">Juicy wings served in your choice of Buffalo or Barbeque sauce.</span>
-    </li>
-	<li id="flame-kissed-calamari">
-        <img src="imgs/calamari.png" alt="Flame-Kissed Calamari" class="dish-image" loading="lazy">
-        <span class="dish-name">Flame-Kissed Calamari<span class="dish-price">$30</span></span>
-        <span class="dish-desc">Crispy calamari lightly seasoned, served with our house dipping sauce.</span>
-    </li>
-	<li id="fish-chips">
-        <span class="dish-name">Fish and Chips<span class="dish-price">$35</span></span>
-        <span class="dish-desc">British classic with caribbean seasoning.</span>
-    </li>
+    <li><span class="dish-name">Ultra Wings<span class="dish-price">$28</span></span>
+    <span class="dish-desc">Buffalo or Barbeque wings.</span></li>
+
+    <li><span class="dish-name">Flame-Kissed Calamari<span class="dish-price">$30</span></span>
+    <span class="dish-desc">Crispy seasoned calamari.</span></li>
+
+    <li><span class="dish-name">Fish and Chips<span class="dish-price">$35</span></span>
+    <span class="dish-desc">British classic with Caribbean seasoning.</span></li>
 </ul>
 
-<div id="burgers" class="subsection">Burgers</div>
+<div class="subsection">Burgers</div>
 <ul>
-    <li id="flames-burger">
-        <span class="dish-name">Flames Burger<span class="dish-price">$35</span></span>
-        <span class="dish-desc">Juicy beef patty with fresh toppings, served with fries.</span>
-    </li>
-    <li id="ultra-flames-burger">
-        <span class="dish-name">Ultra Flames Burger<span class="dish-price">$48</span></span>
-        <span class="dish-desc">Burger with egg, mushrooms, and crispy bacon, served with fries and salad.</span>
-    </li>
+    <li><span class="dish-name">Flames Burger<span class="dish-price">$35</span></span>
+    <span class="dish-desc">Beef patty with fries.</span></li>
+
+    <li><span class="dish-name">Ultra Flames Burger<span class="dish-price">$48</span></span>
+    <span class="dish-desc">Egg, mushrooms, bacon, fries & salad.</span></li>
 </ul>
 
-<div id="pasta" class="subsection">Pastas</div>
+<div class="subsection">Pastas</div>
 <ul>
-    <li id="chicken-alfredo">
-        <span class="dish-name">Chicken Alfredo<span class="dish-price">$45</span></span>
-        <span class="dish-desc">Classic Alfredo pasta mixed with juicy grilled chicken in a creamy sauce.</span>
-    </li>
-    <li id="shrimp-alfredo">
-        <span class="dish-name">Shrimp Alfredo<span class="dish-price">$65</span></span>
-        <span class="dish-desc">Plump shrimp in a smooth, fiery Alfredo sauce.</span>
-    </li>
-</ul>
-<div id="wraps" class="subsection">Wraps</div>
-<ul>
-    
-     <li id="c-roti">
-        <span class="dish-name">Chicken Roti<span class="dish-price">$15</span></span>
-        <span class="dish-desc"></span>
-    </li>
-	
-     <li id="b-roti">
-        <span class="dish-name">Beef Roti<span class="dish-price">$20</span></span>
-        <span class="dish-desc"></span>
-    </li>
-	
-     <li id="g-roti">
-        <span class="dish-name">Goat Roti<span class="dish-price">$25</span></span>
-        <span class="dish-desc"></span>
-    </li>
-    <li id="cheese">
-        <span class="dish-name">Cheese<span class="dish-price">$22</span></span>
-        <span class="dish-desc">A comforting classic — melted cheeses with fresh herbs and a hint of spice, wrapped warm and toasty.</span>
-    </li>
-    <li id="chicken">
-        <span class="dish-name">Chicken<span class="dish-price">$25</span></span>
-        <span class="dish-desc">Grilled chicken breast wrapped in a soft tortilla with crisp lettuce, melted cheese, and our signature creamy house sauce.</span>
-    </li>
-    <li id="fish">
-        <span class="dish-name">Fish<span class="dish-price">$30</span></span>
-        <span class="dish-desc">Crispy golden fish fillet paired with fresh slaw and a zesty lime tartar sauce, wrapped for the perfect bite.</span>
-    </li>
-    <li id="shrimp">
-        <span class="dish-name">Shrimp<span class="dish-price">$35</span></span>
-        <span class="dish-desc">Juicy sautéed shrimp tossed in a garlic butter glaze, wrapped with mixed greens and a touch of tangy aioli.</span>
-    </li>
+    <li><span class="dish-name">Chicken Alfredo<span class="dish-price">$45</span></span>
+    <span class="dish-desc">Creamy Alfredo with grilled chicken.</span></li>
+
+    <li><span class="dish-name">Shrimp Alfredo<span class="dish-price">$65</span></span>
+    <span class="dish-desc">Shrimp in spicy Alfredo sauce.</span></li>
 </ul>
 
-
-<div id="desserts" class="subsection">Desserts</div>
+<div class="subsection">Wraps</div>
 <ul>
-    <li id="dessert-special">
-        <span class="dish-name">Dessert<span class="dish-price">$20</span></span>
-        <span class="dish-desc">😊Staff will inform you regarding today’s available desserts.</span>
-    </li>
+    <li><span class="dish-name">Chicken Roti<span class="dish-price">$15</span></span></li>
+    <li><span class="dish-name">Beef Roti<span class="dish-price">$20</span></span></li>
+    <li><span class="dish-name">Goat Roti<span class="dish-price">$25</span></span></li>
+
+    <li><span class="dish-name">Cheese<span class="dish-price">$22</span></span>
+    <span class="dish-desc">Melted cheeses and herbs.</span></li>
+
+    <li><span class="dish-name">Chicken<span class="dish-price">$25</span></span>
+    <span class="dish-desc">Grilled chicken with lettuce & sauce.</span></li>
+
+    <li><span class="dish-name">Fish<span class="dish-price">$30</span></span>
+    <span class="dish-desc">Crispy fish with slaw & tartar.</span></li>
+
+    <li><span class="dish-name">Shrimp<span class="dish-price">$35</span></span>
+    <span class="dish-desc">Garlic butter shrimp wrap.</span></li>
 </ul>
 
-    </section>
+<div class="subsection">Desserts</div>
+<ul>
+    <li><span class="dish-name">Dessert<span class="dish-price">$20</span></span>
+    <span class="dish-desc">Staff will inform you of today’s options.</span></li>
+</ul>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const menuToggle = document.querySelector('.menu-toggle');
-            const mainNav = document.getElementById('main-navigation');
-            const dropdownButtons = document.querySelectorAll('.dropbtn');
-            const allDropdownContents = document.querySelectorAll('.dropdown-content');
-
-            function closeAllMobileDropdowns() {
-                allDropdownContents.forEach(content => {
-                    if (content.classList.contains('show-mobile')) {
-                        content.classList.remove('show-mobile');
-                        content.previousElementSibling.setAttribute('aria-expanded', 'false');
-                    }
-                });
-            }
-
-            menuToggle.addEventListener('click', function() {
-                mainNav.classList.toggle('show');
-                menuToggle.classList.toggle('active');
-                const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
-                menuToggle.setAttribute('aria-expanded', !isExpanded);
-                if (!mainNav.classList.contains('show')) {
-                    closeAllMobileDropdowns();
-                }
-            });
-
-            dropdownButtons.forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const dropdownContent = this.nextElementSibling;
-                    const isExpanded = this.getAttribute('aria-expanded') === 'true';
-
-                    if (window.innerWidth <= 768) {
-                        allDropdownContents.forEach(content => {
-                            if (content !== dropdownContent && content.classList.contains('show-mobile')) {
-                                content.classList.remove('show-mobile');
-                                content.previousElementSibling.setAttribute('aria-expanded', 'false');
-                            }
-                        });
-                    }
-
-                    if (isExpanded) {
-                        dropdownContent.classList.remove('show-mobile');
-                        dropdownContent.style.display = '';
-                        this.setAttribute('aria-expanded', 'false');
-                    } else {
-                        if (window.innerWidth <= 768) {
-                            dropdownContent.classList.add('show-mobile');
-                        } else {
-                            dropdownContent.style.display = 'flex';
-                        }
-                        this.setAttribute('aria-expanded', 'true');
-                    }
-                });
-
-                button.addEventListener('keydown', function(e) {
-                    const dropdownContent = this.nextElementSibling;
-                    const links = dropdownContent.querySelectorAll('a');
-
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        this.click();
-                        if (this.getAttribute('aria-expanded') === 'true' && links.length > 0) {
-                            links[0].focus();
-                        }
-                    } else if (e.key === 'Escape') {
-                        if (dropdownContent.classList.contains('show-mobile') || dropdownContent.style.display === 'flex') {
-                            dropdownContent.classList.remove('show-mobile');
-                            dropdownContent.style.display = '';
-                            this.setAttribute('aria-expanded', 'false');
-                            this.focus();
-                        }
-                    } else if (e.key === 'ArrowDown') {
-                        e.preventDefault();
-                        if (this.getAttribute('aria-expanded') === 'false') {
-                            this.click();
-                        }
-                        if (links.length > 0) {
-                            links[0].focus();
-                        }
-                    } else if (e.key === 'ArrowUp') {
-                        e.preventDefault();
-                        if (this.getAttribute('aria-expanded') === 'false') {
-                            this.click();
-                        }
-                        if (links.length > 0) {
-                            links[links.length - 1].focus();
-                        }
-                    }
-                });
-
-                button.nextElementSibling.querySelectorAll('a').forEach(link => {
-                    link.addEventListener('keydown', function(e) {
-                        const parentDropdownContent = this.closest('.dropdown-content');
-                        const parentDropbtn = parentDropdownContent.previousElementSibling;
-                        const links = Array.from(parentDropdownContent.querySelectorAll('a'));
-                        let currentFocus = links.indexOf(this);
-
-                        if (e.key === 'ArrowDown') {
-                            e.preventDefault();
-                            if (currentFocus < links.length - 1) {
-                                links[currentFocus + 1].focus();
-                            } else {
-                                links[0].focus();
-                            }
-                        } else if (e.key === 'ArrowUp') {
-                            e.preventDefault();
-                            if (currentFocus > 0) {
-                                links[currentFocus - 1].focus();
-                            } else {
-                                links[links.length - 1].focus();
-                            }
-                        } else if (e.key === 'Escape') {
-                            parentDropdownContent.classList.remove('show-mobile');
-                            parentDropdownContent.style.display = '';
-                            parentDropbtn.setAttribute('aria-expanded', 'false');
-                            parentDropbtn.focus();
-                        } else if (e.key === 'Tab' && !e.shiftKey && currentFocus === links.length - 1) {
-                            parentDropdownContent.classList.remove('show-mobile');
-                            parentDropdownContent.style.display = '';
-                            parentDropbtn.setAttribute('aria-expanded', 'false');
-                        } else if (e.key === 'Tab' && e.shiftKey && currentFocus === 0) {
-                            e.preventDefault();
-                            parentDropdownContent.classList.remove('show-mobile');
-                            parentDropdownContent.style.display = '';
-                            parentDropbtn.setAttribute('aria-expanded', 'false');
-                            parentDropbtn.focus();
-                        }
-                    });
-                });
-            });
-
-            document.addEventListener('click', function(event) {
-                const dropdowns = document.querySelectorAll('.dropdown');
-                dropdowns.forEach(dropdown => {
-                    const dropbtn = dropdown.querySelector('.dropbtn');
-                    const dropdownContent = dropdown.querySelector('.dropdown-content');
-                    if (!dropdown.contains(event.target)) {
-                        if (window.innerWidth > 768 || dropdownContent.classList.contains('show-mobile')) {
-                            dropdownContent.classList.remove('show-mobile');
-                            dropdownContent.style.display = '';
-                            if (dropbtn) {
-                                dropbtn.setAttribute('aria-expanded', 'false');
-                            }
-                        }
-                    }
-                });
-
-                if (window.innerWidth <= 768 && !mainNav.contains(event.target) && !menuToggle.contains(event.target)) {
-                    mainNav.classList.remove('show');
-                    menuToggle.classList.remove('active');
-                    menuToggle.setAttribute('aria-expanded', 'false');
-                    closeAllMobileDropdowns();
-                }
-            });
-
-            mainNav.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', function() {
-                    if (window.innerWidth <= 768) {
-                        mainNav.classList.remove('show');
-                        menuToggle.classList.remove('active');
-                        menuToggle.setAttribute('aria-expanded', 'false');
-                        closeAllMobileDropdowns();
-                    }
-                });
-            });
-        });
-    </script>
+</section>
 
 </body>
 </html>
