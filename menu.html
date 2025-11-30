@@ -1,165 +1,254 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Ultra Flames - Food Menu</title>
-<link rel="icon" href="logo.ico">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Great+Vibes&display=swap" rel="stylesheet">
-<style>
-body {
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-    background: #000;
-    color: #f0f0f0;
-    line-height: 1.6;
-    overflow-x: hidden;
-}
-header {
-    background-color: #000;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.7rem 1rem;
-    border-bottom: 1px solid #333;
-}
-header img {
-    height: 50px;
-}
-nav a {
-    margin: 0 0.75rem;
-    color: #f0f0f0;
-    text-decoration: none;
-    font-weight: 600;
-    transition: color 0.3s;
-}
-nav a:hover {
-    color: #ff7043;
-}
-section {
-    padding: 2rem 1rem;
-    max-width: 650px;
-    margin: auto;
-}
-h2 {
-    color: #ff7043;
-    border-bottom: 1px solid #333;
-    padding-bottom: 0.5rem;
-    margin-bottom: 1.5rem;
-    font-family: 'Great Vibes', cursive;
-    font-size: 2.4rem;
-    text-align: center;
-}
-ul {
-    list-style: none;
-    padding: 0;
-}
-li {
-    margin-bottom: 1.5rem;
-    padding: 1rem;
-    border: 1px solid #2a2a2a;
-    border-radius: 0.5rem;
-    transition: 0.3s;
-    background: #0a0a0a;
-}
-li:hover {
-    background: #1a1a1a;
-    transform: translateY(-3px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-}
-.dish-name {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #ff7043;
-    display: flex;
-    justify-content: space-between;
-}
-.dish-price {
-    font-size: 1.25rem;
-    color: #fff;
-}
-.dish-desc {
-    font-size: 1rem;
-    color: #ccc;
-    margin-top: 0.3rem;
-}
-.subsection {
-    font-family: 'Great Vibes', cursive;
-    font-size: 2rem;
-    color: #ff8a50;
-    text-align: center;
-    margin: 2.2rem 0 1rem;
-}
-</style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ultra Flames - Food Menu</title>
+    <link rel="icon" href="logo.ico" type="image/x-icon" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #000;
+            color: #f1f1f1;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 50px;
+        }
+        .container {
+            backdrop-filter: blur(8px);
+            background: rgba(0,0,0,0.5);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 25px rgba(0,0,0,0.6);
+            max-width: 800px;
+            width: 90%;
+        }
+
+        /* Section Titles - Cursive */
+        h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            font-family: 'Brush Script MT', cursive, Arial;
+        }
+        .subsection {
+            font-size: 1.5rem;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            text-decoration: underline;
+            font-family: 'Brush Script MT', cursive, Arial;
+        }
+
+        .service-charge p {
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+            text-align: center;
+            color: #ccc;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            background: rgba(255, 255, 255, 0.02);
+        }
+        li:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+        }
+
+        .dish-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .dish-name {
+            font-weight: bold;
+            display: block;
+            font-size: 1.1rem;
+            color: #fff;
+        }
+
+        .dish-price {
+            margin-left: 8px;
+            font-weight: normal;
+            color: #aaa;
+            font-size: 1rem;
+        }
+
+        .dish-desc {
+            display: block;
+            font-size: 0.95rem;
+            color: #ccc;
+            margin-top: 3px;
+        }
+
+        /* Credit line */
+        .credit {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+        .credit a {
+            display: inline-flex;
+            align-items: center;
+            margin-left: 4px;
+            text-decoration: none;
+            color: #ccc;
+        }
+        .credit img {
+            width: 18px;
+            height: 18px;
+            border-radius: 10px;
+            margin-left: 4px;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h2>Menu</h2>
 
-<header>
-    <a href="food-menu.html"><img src="imgs/long.png" alt="Ultra Flames Logo" height="2"></a>
-    <nav>
-        <a href="index.html">Drinks Menu</a>
-        <a href="menu.html">Food Menu</a>
-    </nav>
-</header>
+        <div class="service-charge">
+            <p><strong>Please note:</strong> A 10% service charge applies to all dine-in orders.</p>
+        </div>
 
-<section id="food">
-<h2>Menu</h2>
+        <div id="starters-small-plates" class="subsection">Quick Bites</div>
+        <ul>
+            <li id="ultra-wings">
+                <img src="imgs/wings.png" alt="Ultra Wings" class="dish-image" loading="lazy">
+                <div>
+                    <span class="dish-name">Ultra Wings<span class="dish-price">$28</span></span>
+                    <span class="dish-desc">Juicy wings served in your choice of Buffalo or Barbeque sauce.</span>
+                </div>
+            </li>
+            <li id="flame-kissed-calamari">
+                <img src="imgs/calamari.png" alt="Flame-Kissed Calamari" class="dish-image" loading="lazy">
+                <div>
+                    <span class="dish-name">Flame-Kissed Calamari<span class="dish-price">$30</span></span>
+                    <span class="dish-desc">Crispy calamari lightly seasoned, served with our house dipping sauce.</span>
+                </div>
+            </li>
+            <li id="fish-chips">
+                <div>
+                    <span class="dish-name">Fish and Chips<span class="dish-price">$35</span></span>
+                    <span class="dish-desc">British classic with Caribbean seasoning.</span>
+                </div>
+            </li>
+        </ul>
 
-<div class="subsection">Quick Bites</div>
-<ul>
-    <li><span class="dish-name">Ultra Wings<span class="dish-price">$28</span></span>
-    <span class="dish-desc">Buffalo or Barbeque wings.</span></li>
+        <div id="burgers" class="subsection">Burgers</div>
+        <ul>
+            <li id="flames-burger">
+                <div>
+                    <span class="dish-name">Flames Burger<span class="dish-price">$35</span></span>
+                    <span class="dish-desc">Juicy beef patty with fresh toppings, served with fries.</span>
+                </div>
+            </li>
+            <li id="ultra-flames-burger">
+                <div>
+                    <span class="dish-name">Ultra Flames Burger<span class="dish-price">$48</span></span>
+                    <span class="dish-desc">Burger with egg, mushrooms, and crispy bacon, served with fries and salad.</span>
+                </div>
+            </li>
+        </ul>
 
-    <li><span class="dish-name">Flame-Kissed Calamari<span class="dish-price">$30</span></span>
-    <span class="dish-desc">Crispy seasoned calamari.</span></li>
+        <div id="pasta" class="subsection">Pastas</div>
+        <ul>
+            <li id="chicken-alfredo">
+                <div>
+                    <span class="dish-name">Chicken Alfredo<span class="dish-price">$45</span></span>
+                    <span class="dish-desc">Classic Alfredo pasta mixed with juicy grilled chicken in a creamy sauce.</span>
+                </div>
+            </li>
+            <li id="shrimp-alfredo">
+                <div>
+                    <span class="dish-name">Shrimp Alfredo<span class="dish-price">$65</span></span>
+                    <span class="dish-desc">Plump shrimp in a smooth, fiery Alfredo sauce.</span>
+                </div>
+            </li>
+        </ul>
 
-    <li><span class="dish-name">Fish and Chips<span class="dish-price">$35</span></span>
-    <span class="dish-desc">British classic with Caribbean seasoning.</span></li>
-</ul>
+        <div id="wraps" class="subsection">Wraps</div>
+        <ul>
+            <li id="c-roti">
+                <div>
+                    <span class="dish-name">Chicken Roti<span class="dish-price">$15</span></span>
+                </div>
+            </li>
+            <li id="b-roti">
+                <div>
+                    <span class="dish-name">Beef Roti<span class="dish-price">$20</span></span>
+                </div>
+            </li>
+            <li id="g-roti">
+                <div>
+                    <span class="dish-name">Goat Roti<span class="dish-price">$25</span></span>
+                </div>
+            </li>
+            <li id="cheese">
+                <div>
+                    <span class="dish-name">Cheese<span class="dish-price">$22</span></span>
+                    <span class="dish-desc">A comforting classic — melted cheeses with fresh herbs and a hint of spice, wrapped warm and toasty.</span>
+                </div>
+            </li>
+            <li id="chicken">
+                <div>
+                    <span class="dish-name">Chicken<span class="dish-price">$25</span></span>
+                    <span class="dish-desc">Grilled chicken breast wrapped in a soft tortilla with crisp lettuce, melted cheese, and our signature creamy house sauce.</span>
+                </div>
+            </li>
+            <li id="fish">
+                <div>
+                    <span class="dish-name">Fish<span class="dish-price">$30</span></span>
+                    <span class="dish-desc">Crispy golden fish fillet paired with fresh slaw and a zesty lime tartar sauce, wrapped for the perfect bite.</span>
+                </div>
+            </li>
+            <li id="shrimp">
+                <div>
+                    <span class="dish-name">Shrimp<span class="dish-price">$35</span></span>
+                    <span class="dish-desc">Juicy sautéed shrimp tossed in a garlic butter glaze, wrapped with mixed greens and a touch of tangy aioli.</span>
+                </div>
+            </li>
+        </ul>
 
-<div class="subsection">Burgers</div>
-<ul>
-    <li><span class="dish-name">Flames Burger<span class="dish-price">$35</span></span>
-    <span class="dish-desc">Beef patty with fries.</span></li>
+        <div id="desserts" class="subsection">Desserts</div>
+        <ul>
+            <li id="dessert-special">
+                <div>
+                    <span class="dish-name">Dessert<span class="dish-price">$20</span></span>
+                    <span class="dish-desc">😊 Staff will inform you regarding today’s available desserts.</span>
+                </div>
+            </li>
+        </ul>
 
-    <li><span class="dish-name">Ultra Flames Burger<span class="dish-price">$48</span></span>
-    <span class="dish-desc">Egg, mushrooms, bacon, fries & salad.</span></li>
-</ul>
-
-<div class="subsection">Pastas</div>
-<ul>
-    <li><span class="dish-name">Chicken Alfredo<span class="dish-price">$45</span></span>
-    <span class="dish-desc">Creamy Alfredo with grilled chicken.</span></li>
-
-    <li><span class="dish-name">Shrimp Alfredo<span class="dish-price">$65</span></span>
-    <span class="dish-desc">Shrimp in spicy Alfredo sauce.</span></li>
-</ul>
-
-<div class="subsection">Wraps</div>
-<ul>
-    <li><span class="dish-name">Chicken Roti<span class="dish-price">$15</span></span></li>
-    <li><span class="dish-name">Beef Roti<span class="dish-price">$20</span></span></li>
-    <li><span class="dish-name">Goat Roti<span class="dish-price">$25</span></span></li>
-
-    <li><span class="dish-name">Cheese<span class="dish-price">$22</span></span>
-    <span class="dish-desc">Melted cheeses and herbs.</span></li>
-
-    <li><span class="dish-name">Chicken<span class="dish-price">$25</span></span>
-    <span class="dish-desc">Grilled chicken with lettuce & sauce.</span></li>
-
-    <li><span class="dish-name">Fish<span class="dish-price">$30</span></span>
-    <span class="dish-desc">Crispy fish with slaw & tartar.</span></li>
-
-    <li><span class="dish-name">Shrimp<span class="dish-price">$35</span></span>
-    <span class="dish-desc">Garlic butter shrimp wrap.</span></li>
-</ul>
-
-<div class="subsection">Desserts</div>
-<ul>
-    <li><span class="dish-name">Dessert<span class="dish-price">$20</span></span>
-    <span class="dish-desc">Staff will inform you of today’s options.</span></li>
-</ul>
-
-</section>
-
+        <!-- Credit line -->
+        <p class="credit">
+            Website designed and maintained by 
+            <a href="https://instagram.com/cazvfa" target="_blank">
+                cazvfa
+                <img src="imgs/ig.png" alt="Instagram">
+            </a>
+        </p>
+    </div>
 </body>
 </html>
